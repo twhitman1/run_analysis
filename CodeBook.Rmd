@@ -1,0 +1,86 @@
+---
+title: "Code Book - Coursera JHU Course 3 Final"
+author: "Tom Whitman"
+date: "November 14, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This code book provides an overview of the data source, key variables and processes which were used to execute the final assignment for the Getting and Cleaning Data class provided by John Hopkins University, via Coursera.
+
+## Assignment Instructions
+
+Create one R script called run_analysis.R that does the following.
+
+1. Merges the training and the test sets to create one data set.
+2. Extracts only the measurements on the mean and standard deviation for each measurement.
+3. Uses descriptive activity names to name the activities in the data set
+4. Appropriately labels the data set with descriptive variable names.
+5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+Data source:  https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
+
+## Assignment Review Criteria
+
+1. The submitted data set is tidy.
+2. The Github repo contains the required scripts.
+3. GitHub contains a code book that modifies and updates the available codebooks with the data to indicate all the variables and summaries calculated, along with units, and any other relevant information.
+4. The README that explains the analysis files is clear and understandable.
+5. The work submitted for this project is the work of the student who submitted it.
+
+## Input Data
+
+After retrieving the zip file from the data source (link provided above), multiple .txt files were observed.  Principally, the following .txt files were used as informational support:
+1. README.txt -  database authors provided intro and overview to the database
+2. features_info.txt -  provided key background and information regarding how to interpret abbreviations in variable names, and how the experiment had two cohorts (train and test).
+3. featerus.txt -  provided a full list of variable names (abbreviated)
+
+The following .txt files were used as primary data sources.  As part of the project, I merged these 6 distinct data files into 1 data file.  In doing this, I added 1 new variable name "cohort" to indicate whether an observation came from the 'test' data versus the 'train' data (because subjects were assigned to mutually exclusive test vs. train groups):
+1. subject_test.txt
+2. x_test.txt
+3. y_test.txt
+4. subject_train.txt
+5. x_train.txt
+6. y_train.txt
+
+## Packages
+
+In addition to the 'base' package and fucntiosn available in R by default, the following packages were used:
+1. dplyr
+2. tidyr
+
+## Constructing working dataframe
+
+First, I read the three train files (subject_train.txt; x_train.txt; y_train.txt) into independent R dataframes (subTrain, xtrain, and ytrain, respectively).  For xtrain, I applied variable names sourced from features.txt.  Then I used cbind to merge the three dataframes into one dataframe called 'train'.  
+
+Second, I read the three test files (subjects_test.txt; x_test.txt; y_test.txt) into independent R dataframes (subTest, xtest, ytest, respectively).  For ytest, I applied variable names sourced from features.txt.
+
+Third, I merged the test and train dataframes into a single dataframe called 'mergedDF', using rbind.
+
+Then I selected a subset of columns from mergedDF, and placed in new datafram called DF1.  At this point, I updated variable names to be more descriptive and readable, based on the 'features_info.txt' source file.  In addition, I convered the codes in the "Activities" variable from number to text.
+
+Finally, I created a final data frame (called "FDF") which showed the mean of the variables of interest, at summary level (grouped by subject and activity).
+
+##  Key variables
+
+subject: numeric (integer) id assigned to each subject.
+
+cohort: two categories: training and test, based on which dataset the subject was in.
+
+activity: character string indicating the activity performed:
+  1. walking
+  2. walking_ustairs
+  3. walking_downstairs
+  4. sitting
+  5. standing
+  6. laying
+
+variables: indicated measurement source.  These incldued accelerometer and gyroscope 3-axial raw signals, with  five categories: body.accelerometer, body.accelerometer.jerk, body.gyroscope, body.gyroscope.jerk, and gravity.accelerometer.
+
+
+<End of document>
